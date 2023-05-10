@@ -1,0 +1,18 @@
+[project]
+name = "openshift_ldap_operator"
+version = "0.0.1"
+authors = [
+    { name = "Ian Neal", email = "wopr@wopr.tech" },
+]
+description = "LDAP sync operator for OpenShift, using Kopf (the Kubernetes Operator Pythonic Framework) to manage cluster resources."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: System Administrators",
+    "Topic :: System :: Systems Administration :: Authentication/Directory :: LDAP",
+]
+dependencies = [
+    "kopf",
+    "kubernetes",
+]
