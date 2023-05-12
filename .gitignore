@@ -1,0 +1,14 @@
+/.python-version
+/venv
+*~
+*.pyc
+*.pyo
+__pycache__
+.vscode
+.coverage
+.pytest_cache
+report.xml
+*.egg-info
+.talismanrc
+dist
+.idea
