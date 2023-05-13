@@ -1,33 +1,77 @@
 
 
 """
+v1alpha1
+
 LdapAdminGroup
-  Spec
-    GroupRef
-    RoleRef
-  Status
-    GroupName
-    GroupDN
-    RoleRef
+  spec
+    groupRef
+    roleRef
+  status
+    groupName
+    groupDN
+    roleRef
 LdapConfig
-  Spec
-    ServerConfig
-      Url
-      BindDN
-      BindPassword
-      Insecure
-      CA
-      BaseDN
-      ServerType
-        RFC2307
-        ActiveDirectory
-        AugmentedActiveDirectory
-    UserSearch
-    
-    GroupSearch
-    Schedule
-  Status
-    Conditions
-    LastUpdatedTime
+  spec
+    serverConfig
+      url
+      bindDN
+      bindPassword
+        value, or
+        secret
+          name
+          key
+      insecure
+      ca
+        value, or
+        configmap
+          name
+          key
+      baseDN
+      serverType
+        rfc2307
+        activeDirectory
+        augmentedActiveDirectory
+    userSearch
+      baseDN
+      scope
+        sub
+        base
+        one
+      derefAliases
+        never
+        search
+        base
+        always
+      timeout
+      filter
+      pageSize
+      attributes
+        uid
+        name[]
+        groupMembership[]
+    groupSearch
+      baseDN
+      scope
+      derefAliases
+      timeout
+      filter
+      pageSize
+      attributes
+        uid
+        name
+        userMembership[]
+      uidNameMapping{}
+    schedule
+  status
+    conditions
+    lastUpdatedTimestamp
+LdapGroup
+  spec
+    groupName
+  status
+    groupDN
+    clusterGroupName
+    lastUpdatedTimestamp
 """
 
