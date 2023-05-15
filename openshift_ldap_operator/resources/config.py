@@ -1,40 +1,36 @@
 from dataclasses import dataclass, field
 from uuid import UUID
-from typing import Optional
-from kubecrd import KubeResourceBase # maybe try something else though because we can't add status to these
+from typing import List, Optional
+from .base import KubeResourceBase, KubeLocalResourceRef, KubeCondition
 from apischema import schema
-
-
-@dataclass
-class K8sDataRef:
-    name: str = field(
-        metadata=schema(
-
-        )
-    )
-    key: str = field(
-        metadata=schema(
-
-        )
-    )
+from datetime import datetime
 
 
 @dataclass
 class LdapConfigPassword:
     value: Optional[str] = field(
         metadata=schema(
-            
+            description='value is an optional static value for a password',
         )
     )
-    secret: K8sDataRef = field(
+    secret: KubeLocalResourceRef = field(
         metadata=schema(
-
+            description='secret is an optional reference to a secret in the local namespace',
         ),
     )
 
 @dataclass
 class LdapConfigCfgMap:
-    pass
+    value: Optional[str] = field(
+        metadata=schema(
+            description='',
+        )
+    )
+    configMap: KubeLocalResourceRef = field(
+        metadata=schema(
+            description='',
+        )
+    )
 
 
 @dataclass
@@ -44,10 +40,21 @@ class LdapConfigServerConfig:
     bindPassword: LdapConfigPassword
 
 
+@dataclass
+class LdapConfigSpec:
+    serverConfig: LdapConfigServerConfig
+
+
+@dataclass
+class LdapConfigStatus:
+    conditions: List[KubeCondition]
+    lastUpdatedTimestamp: datetime
+
 
 @dataclass
 class LdapConfig(KubeResourceBase):
     __group__ = 'ldap.wopr.tech'
     __version__ = 'v1alpha1'
 
-    serverConfig: LdapConfigServerConfig
+    spec: LdapConfigSpec
+    status: LdapConfigStatus

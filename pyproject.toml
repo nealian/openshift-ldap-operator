@@ -15,5 +15,4 @@ classifiers = [
 dependencies = [
     "kopf",
     "kubernetes",
-    "kubecrd",
 ]
