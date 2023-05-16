@@ -75,3 +75,4 @@ LdapGroup
     lastUpdatedTimestamp
 """
 
+from .config import LdapConfig

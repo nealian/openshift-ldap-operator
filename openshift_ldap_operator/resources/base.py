@@ -10,17 +10,15 @@ from kubernetes.client.models.v1_local_object_reference import V1LocalObjectRefe
 from kubernetes.client.models.v1_object_meta import V1ObjectMeta
 
 
-_T = TypeVar('_T')
-
 def _field_schema(
     *,
     # field
     default=MISSING,
     default_factory=MISSING,
-    init: bool=True,
-    repr: bool=True,
-    hash: Optional[bool]=None,
-    compare: bool=True,
+    init: bool = True,
+    repr: bool = True,
+    hash: Optional[bool] = None,
+    compare: bool = True,
     kw_only=MISSING,
     # schema
     # annotations
@@ -54,7 +52,7 @@ def _field_schema(
     override: bool = False,
 ):
     if default is not MISSING and default_factory is not MISSING:
-        raise ValueError('Only one of default and default_factory may be set.')
+        raise ValueError("Only one of default and default_factory may be set.")
     if default is not MISSING:
         return field(
             default=default,
@@ -87,7 +85,7 @@ def _field_schema(
                 extra=extra,
                 override=override,
             ),
-            kw_only=kw_only, # type: ignore
+            kw_only=kw_only,  # type: ignore
         )
     elif default_factory is not MISSING:
         return field(
@@ -121,7 +119,7 @@ def _field_schema(
                 extra=extra,
                 override=override,
             ),
-            kw_only=kw_only, # type: ignore
+            kw_only=kw_only,  # type: ignore
         )
     else:
         return field(
@@ -154,11 +152,15 @@ def _field_schema(
                 extra=extra,
                 override=override,
             ),
-            kw_only=kw_only, # type: ignore
+            kw_only=kw_only,  # type: ignore
         )
 
 
 class KubeResourceBase:
+    api_version: str
+    kind: str
+    metadata: V1ObjectMeta | dict[str, Any]
+
     pass
 
 
@@ -179,41 +181,33 @@ class KubeLocalResourceRef:
 class KubeLocalResourceRefWithDataKey(KubeLocalResourceRef):
     key: str = _field_schema(  # type: ignore
         description="name of field within referent's data section. Must be a valid key.",
-    ),
+    )
 
 
 # See V1Condition; maybe we can use that as the type in the thing?
 @dataclass
 class KubeCondition:
-    last_transition_time: datetime = field(
-        metadata=schema(
-            description="lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
-        ),
+    last_transition_time: datetime = _field_schema(
+        description="lastTransitionTime is the last time the condition transitioned from one status to another. This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.",
     )
-    message: str = field(
-        metadata=schema(
-            description="message is a human readable message indicating details about the transition. This may be an empty string.",
-        ),
+    message: str = _field_schema(
+        description="message is a human readable message indicating details about the transition. This may be an empty string.",
     )
-    observed_generation: Optional[int] = field(
-        metadata=schema(
-            description="observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.",
-        ),
+    observed_generation: Optional[int] = _field_schema(
+        description="observedGeneration represents the .metadata.generation that the condition was set based upon. For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date with respect to the current state of the instance.",
     )
-    reason: str = field(
-        metadata=schema(
-            description="reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.",
-        ),
+    reason: str = _field_schema(
+        description="reason contains a programmatic identifier indicating the reason for the condition's last transition. Producers of specific condition types may define expected values and meanings for this field, and whether the values are considered a guaranteed API. The value should be a CamelCase string. This field may not be empty.",
     )
-    status: str = field(
-        metadata=schema(
-            description="status of the condition, one of True, False, Unknown.",
-        ),
+    status: str = _field_schema(
+        description="status of the condition, one of True, False, Unknown.",
     )
-    type: str = field(
-        metadata=schema(
-            description="type of condition in CamelCase or in foo.example.com/CamelCase.",
-        ),
+    type: str = _field_schema(
+        description="type of condition in CamelCase or in foo.example.com/CamelCase.",
     )
 
-    __type_reference__: Type = V1Condition
+    __type_reference__: Type = field(
+        default=V1Condition,
+        init=False,
+        repr=False,
+    )
