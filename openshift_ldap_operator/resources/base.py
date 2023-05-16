@@ -8,8 +8,10 @@ from apischema.types import Number, Undefined
 from kubernetes.client.models.v1_condition import V1Condition
 from kubernetes.client.models.v1_local_object_reference import V1LocalObjectReference
 from kubernetes.client.models.v1_object_meta import V1ObjectMeta
+from kubernetes.client.models.v1_object_reference import V1ObjectReference
 
 
+# Many lines, simple action.
 def _field_schema(
     *,
     # field
@@ -160,14 +162,18 @@ class KubeResourceBase:
     api_version: str
     kind: str
     metadata: V1ObjectMeta | dict[str, Any]
-
+    # TODO: init / metadata?
+    # TODO: to_json?
+    # TODO: from_json??
+    # TODO: yaml file???
+    # TODO: Use type reference somehow? If even necessary?
     pass
 
 
-# See V1LocalObjectReference; maybe we can use that as the type in the thing?
+# See V1LocalObjectReference; TODO: maybe we can use that as the type in the thing?
 @dataclass
 class KubeLocalResourceRef:
-    name: str = _field_schema(  # type: ignore
+    name: str = _field_schema(
         description="Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
     )
     __type_reference__: Type = field(
@@ -178,13 +184,30 @@ class KubeLocalResourceRef:
 
 
 @dataclass
+class KubeTypedResourceRef:
+    api_version: str = _field_schema(
+        description="",
+    )
+    kind: str = _field_schema(
+        description="",
+    )
+    name: str = _field_schema(
+        description="",
+    )
+    namespace: Optional[str] = _field_schema(
+        description="",
+    )
+    __type_reference__: Type = field(default=V1ObjectReference, init=False, repr=False)
+
+
+@dataclass
 class KubeLocalResourceRefWithDataKey(KubeLocalResourceRef):
-    key: str = _field_schema(  # type: ignore
+    key: str = _field_schema(
         description="name of field within referent's data section. Must be a valid key.",
     )
 
 
-# See V1Condition; maybe we can use that as the type in the thing?
+# See V1Condition; TODO: maybe we can use that as the type in the thing?
 @dataclass
 class KubeCondition:
     last_transition_time: datetime = _field_schema(
