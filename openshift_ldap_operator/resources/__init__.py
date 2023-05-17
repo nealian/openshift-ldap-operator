@@ -75,4 +75,12 @@ LdapGroup
     lastUpdatedTimestamp
 """
 
-from .config import LdapConfig
+from openshift_ldap_operator.resources.admin_group import LdapAdminGroup
+from openshift_ldap_operator.resources.config import LdapConfig
+from openshift_ldap_operator.resources.group import LdapGroup
+
+__all__ = [
+    LdapAdminGroup,
+    LdapConfig,
+    LdapGroup,
+]
