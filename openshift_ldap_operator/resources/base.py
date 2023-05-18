@@ -234,3 +234,12 @@ class KubeCondition:
         init=False,
         repr=False,
     )
+
+
+@dataclass(frozen=True)
+class PrintColumn:
+    name: str
+    type: str
+    json_path: str
+    priority: int = 0
+    description: str = ''
