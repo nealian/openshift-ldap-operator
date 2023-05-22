@@ -196,7 +196,6 @@ class LdapConfig(KubeResourceBase):
     __group__ = "ldap.wopr.tech"
     __version__ = "v1alpha1"
     __scope__ = "cluster"
-    __canon_name__ = "cluster"
     __singular__ = "ldapconfig"
     __plural__ = "ldapconfigs"
     __kind__ = "LDAPConfig"

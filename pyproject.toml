@@ -15,5 +15,6 @@ classifiers = [
 dependencies = [
     "kopf",
     "kubernetes",
+    "openshift",
     "apischema",
 ]

@@ -1,6 +1,6 @@
 from dataclasses import MISSING, dataclass, field
 from datetime import datetime
-from typing import Any, Optional, Pattern, Sequence, Type, TypeVar, Union
+from typing import Any, Optional, Pattern, Sequence, Type, Union
 
 from apischema import schema
 from apischema.schemas import ContentEncoding, Deprecated, Extra
@@ -242,4 +242,4 @@ class PrintColumn:
     type: str
     json_path: str
     priority: int = 0
-    description: str = ''
+    description: str = ""
