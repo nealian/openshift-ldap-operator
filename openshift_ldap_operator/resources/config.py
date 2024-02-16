@@ -10,21 +10,24 @@ from openshift_ldap_operator.resources.base import (
     KubeResourceBase,
     PrintColumn,
     _field_schema,
+    dataclassloader,
 )
 
 # TODO: find out what's optional
 
 
+@dataclassloader
 @dataclass
 class LdapConfigPassword:
     value: Optional[str] = _field_schema(
-        description="value is an optional static value for a password. Conflicts with 'secret'.",
+        description="value is an optional static value for a password. If set, will create or override the secret 'ldap-operator-bindpass' within the 'openshift-config' namespace. Conflicts with 'secret'.",
     )
     secret: Optional[KubeLocalResourceRef] = _field_schema(
         description="secret is an optional reference to a value in a secret in the 'openshift-config' namespace. Conflicts with 'value'.",
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfigCfgMap:
     value: Optional[str] = _field_schema(
@@ -54,6 +57,7 @@ class LdapConfigDerefAliases(StrEnum):
     Always = "always"
 
 
+@dataclassloader
 @dataclass
 class LdapConfigServerConfig:
     url: str = _field_schema(
@@ -79,6 +83,7 @@ class LdapConfigServerConfig:
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfigUserSearchAttributes:
     uid: str = _field_schema(
@@ -87,11 +92,20 @@ class LdapConfigUserSearchAttributes:
     name: list[str] = _field_schema(
         description="name defines which attribute determines the value for the user's username within OpenShift.  The first attribute with a non-empty value will be used.  Values must be unique.",
     )
+    display_name: list[str] = _field_schema(
+        description="displayName defines which attribute determines the value for the user's display name.  Optional.  If unspecified, no display name is set for the identity.  The first attribute with a non-empty value will be used.",
+        default_factory=list,
+    )
+    email: list[str] = _field_schema(
+        description="email defines which attribute determines the value for the user's email.  The first attribute with a non-empty value will be used.  Values must be unique.  Optional.",
+        default_factory=list,
+    )
     group_membership: list[str] = _field_schema(
         description="groupMembership defines which attribute determines which groups a user is a member of; only used in ActiveDirectory contexts.  Uses the value of the first non-empty attribute in the list.",
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfigUserSearch:
     base_dn: str = _field_schema(
@@ -117,6 +131,7 @@ class LdapConfigUserSearch:
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfigGroupSearchAttributes:
     uid: str = _field_schema(
@@ -130,6 +145,7 @@ class LdapConfigGroupSearchAttributes:
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfigGroupSearch:
     base_dn: str = _field_schema(
@@ -158,6 +174,7 @@ class LdapConfigGroupSearch:
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfigSpec:
     server_config: LdapConfigServerConfig = _field_schema(
@@ -174,6 +191,7 @@ class LdapConfigSpec:
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfigStatus:
     conditions: list[KubeCondition] = _field_schema(
@@ -184,6 +202,7 @@ class LdapConfigStatus:
     )
 
 
+@dataclassloader
 @dataclass
 class LdapConfig(KubeResourceBase):
     spec: LdapConfigSpec = _field_schema(
@@ -199,3 +218,4 @@ class LdapConfig(KubeResourceBase):
     __singular__ = "ldapconfig"
     __plural__ = "ldapconfigs"
     __kind__ = "LDAPConfig"
+    __allowed_names__ = ["cluster"]

@@ -1,10 +1,12 @@
 from dataclasses import MISSING, dataclass, field
 from datetime import datetime
+import re
 from typing import Any, Optional, Pattern, Sequence, Type, Union
 
 from apischema import schema
 from apischema.schemas import ContentEncoding, Deprecated, Extra
 from apischema.types import Number, Undefined
+from dacite import from_dict, Config as daConf
 from kubernetes.client.models.v1_condition import V1Condition
 from kubernetes.client.models.v1_local_object_reference import V1LocalObjectReference
 from kubernetes.client.models.v1_object_meta import V1ObjectMeta
@@ -161,7 +163,8 @@ def _field_schema(
 class KubeResourceBase:
     api_version: str
     kind: str
-    metadata: V1ObjectMeta | dict[str, Any]
+    #metadata: V1ObjectMeta | dict[str, Any]
+    metadata: dict[str, Any]
     # TODO: init / metadata?
     # TODO: to_json?
     # TODO: from_json??
@@ -243,3 +246,34 @@ class PrintColumn:
     json_path: str
     priority: int = 0
     description: str = ""
+
+
+def dataclassloader(cls):
+    def snake_case(x: str):
+        return re.sub(r'(?<!^)(?=[A-Z])', '_', x).lower()
+    
+    def snake_case_keys(_from: Any):
+        if isinstance(_from, list):
+            ret = []
+            for item in _from:
+                ret.append(snake_case_keys(item))
+            return ret
+        elif isinstance(_from, dict):
+            ret = {}
+            for k,v in _from.items():
+                k = snake_case(k)
+                ret[k] = snake_case_keys(v)
+            return ret
+        else:
+            return _from
+
+    # TODO: needs lots more logic (key's param is another dataclass? Or a list? Or an Enum?)
+    @classmethod
+    def _load(cls, _from: Optional[dict]):
+        ret = snake_case_keys(_from)
+        if isinstance(ret, dict):
+            return from_dict(data_class=cls, data=ret)
+        return None
+            
+    cls._load = _load
+    return cls

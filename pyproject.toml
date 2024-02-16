@@ -6,7 +6,7 @@ authors = [
 ]
 description = "LDAP sync operator for OpenShift, using Kopf (the Kubernetes Operator Pythonic Framework) to manage cluster resources."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 1 - Planning",
     "Intended Audience :: System Administrators",
@@ -17,4 +17,5 @@ dependencies = [
     "kubernetes",
     "openshift",
     "apischema",
+    "dacite"
 ]
